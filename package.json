@@ -1,0 +1,32 @@
+{
+  "name": "platformer-game-js",
+  "version": "1.0.0",
+  "description": "a Platformer game with JS and Phaser",
+  "main": "./src/index.js",
+  "scripts": {
+    "test": "jest",
+    "watch": "webpack --watch",
+    "start": "webpack serve --open",
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SigmaSam/Platformer-Game-JS.git"
+  },
+  "author": "Samuel Almao",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SigmaSam/Platformer-Game-JS/issues"
+  },
+  "homepage": "https://github.com/SigmaSam/Platformer-Game-JS#readme",
+  "devDependencies": {
+    "file-loader": "^6.2.0",
+    "webpack": "^5.28.0",
+    "webpack-cli": "^4.6.0",
+    "webpack-dev-server": "^3.11.2"
+  },
+  "dependencies": {
+    "phaser": "^3.54.0",
+    "phaser3-project-template": "^1.0.9"
+  }
+}
