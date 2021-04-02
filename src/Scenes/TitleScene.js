@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import config from '../Config/config';
+import Button from '../Objects/Button';
  
 export default class TitleScene extends Phaser.Scene {
   constructor () {
@@ -11,61 +12,23 @@ export default class TitleScene extends Phaser.Scene {
     this.add.image(400, 300, 'bgImage');
     
     // Play
-    this.gameButton = this.add.sprite(100, 200, 'butOne').setInteractive();
-    this.centerButton(this.gameButton, 1);
-    this.gameText = this.add.text(0, 0, 'Play', { fontSize: '32px', fill: '#fff' });
-    Phaser.Display.Align.In.Center(this.gameText, this.gameButton);
-
-    this.gameButton.on('pointerdown', () => {
-      this.scene.start('Game');
-    });
+    this.gameButton = new Button(this, config.width/2, config.height/2 - 100, 'butOne', 'butTwo', 'Play', 'Game');
   
     // Options
      
-    this.gameButton = this.add.sprite(300, 200, 'butOne').setInteractive();
-    this.centerButton(this.gameButton);
-    this.gameText = this.add.text(0, 0, 'Options', { fontSize: '32px', fill: '#fff' });
-    Phaser.Display.Align.In.Center(this.gameText, this.gameButton);
-
-    this.gameButton.on('pointerdown', () => {
-      this.scene.start('Options');
-    });  
+    this.optionsButton = new Button(this, config.width/2, config.height/2, 'butOne', 'butTwo', 'Options', 'Options');
     
     // Credits
     
-    this.gameButton = this.add.sprite(300, 200, 'butOne').setInteractive();
-    this.centerButton(this.gameButton, -1);
-    this.gameText = this.add.text(0, 0, 'Credits', { fontSize: '32px', fill: '#fff' });
-    Phaser.Display.Align.In.Center(this.gameText, this.gameButton);
-
-    this.gameButton.on('pointerdown', () => {
-      this.scene.start('Credits');
-    });  
+    this.creditsButton = new Button(this, config.width/2, config.height/2 + 100, 'butOne', 'butTwo', 'Credits', 'Credits');
     
-    this.input.on('pointerover', (event, gameObjects) => {
-      gameObjects[0].setTexture('butTwo');
-    });
 
-    this.input.on('pointerout', (event, gameObjects) => {
-      gameObjects[0].setTexture('butOne');
-    });
-
-    this.input.on('pointerover', (event, gameObjects) => {
-      gameObjects[0].setTexture('butTwo');
-    });
-
-    this.input.on('pointerout', (event, gameObjects) => {
-      gameObjects[0].setTexture('butOne');
-    });  
-
+    this.model = this.sys.game.globals.model;
+    if (this.model.musicOn === true && this.model.bgMusicPlaying === false) {
+      this.bgMusic = this.sound.add('bgMusic', { volume: 0.5, loop: true });
+      this.bgMusic.play();
+      this.model.bgMusicPlaying = true;
+      this.sys.game.globals.bgMusic = this.bgMusic;
+    }
   }
-    centerButton(gameObject, offset = 0) {
-      Phaser.Display.Align.In.Center(
-        gameObject, this.add.zone(
-          config.width / 2,
-          config.height / 2 - offset * 100,
-          config.width, config.height,
-        ),
-      );
-    } 
-  };
+};
