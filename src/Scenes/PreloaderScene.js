@@ -1,7 +1,13 @@
-import 'phaser';
+import Phaser from 'phaser';
 import logo from '../assets/zenva_logo.png';
-import b1 from '../assets/ui/blue_button02.png';
-import b2 from '../assets/ui/blue_button03.png';
+import bgImage from '../assets/background/bg.png';
+import bgMusic from '../assets/awesomeness.wav';
+import butOne from '../assets/ui/blue_button02.png';
+import butTwo from '../assets/ui/blue_button03.png';
+import checkedBox from '../assets/ui/blue_boxCheckmark.png';
+import box from '../assets/ui/grey_box.png';
+
+
  
 export default class PreloaderScene extends Phaser.Scene {
   constructor () {
@@ -18,7 +24,7 @@ export default class PreloaderScene extends Phaser.Scene {
     var height = this.cameras.main.height;
     var loadingText = this.make.text({
       x: width / 2,
-      y: height / 2 - 50,
+      y: height / 2 - 70,
       text: 'Loading...',
       style: {
         font: '20px monospace',
@@ -62,21 +68,25 @@ export default class PreloaderScene extends Phaser.Scene {
       assetText.setText('Loading asset: ' + file.key);
     });
 
-// remove progress bar when complete
-this.load.on('complete', function () {
-  progressBar.destroy();
-  progressBox.destroy();
-  loadingText.destroy();
-  percentText.destroy();
-  assetText.destroy();
-  this.ready();
-}.bind(this));
+    // remove progress bar when complete
+    this.load.on('complete', function () {
+      progressBar.destroy();
+      progressBox.destroy();
+      loadingText.destroy();
+      percentText.destroy();
+      assetText.destroy();
+      this.ready();
+    }.bind(this));
  
-this.timedEvent = this.time.delayedCall(3000, this.ready, [], this);
- 
-this.load.image('blueButton1', b1);
-this.load.image('blueButton2', b2);
-this.load.image('logo', logo);
+    this.timedEvent = this.time.delayedCall(3000, this.ready, [], this);
+    
+    this.load.image('bgImage', bgImage);
+    this.load.image('logo', logo);
+    this.load.audio('bgMusic', bgMusic);
+    this.load.image('butOne', butOne);
+    this.load.image('butTwo', butTwo);
+    this.load.image('checkedBox', checkedBox);
+    this.load.image('box', box)
   }
   create () {
   }
@@ -84,11 +94,11 @@ this.load.image('logo', logo);
   init () {
     this.readyCount = 0;
   }
-
   ready ()  {
+    
      this.readyCount++;
     if (this.readyCount === 2) {
-      this.scene.start('Game');
+      this.scene.start('Title');
     }
   }
 
