@@ -3,8 +3,8 @@ import Phaser from 'phaser';
 export default {
   type: Phaser.AUTO,
   parent: 'phaser-example',
-  width: 800,
-  height: 600,
+  width: 960,
+  height: 720,
   physics: {
     default: 'arcade',
     arcade: {

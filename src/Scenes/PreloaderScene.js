@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
-import logo from '../assets/zenva_logo.png';
+import player from '../assets/player.png';
+import platform from '../assets/platform.png';
 import bgImage from '../assets/background/bg.png';
 import bgMusic from '../assets/awesomeness.wav';
 import butOne from '../assets/ui/blue_button02.png';
@@ -78,17 +79,19 @@ export default class PreloaderScene extends Phaser.Scene {
       this.ready();
     }.bind(this));
  
-    this.timedEvent = this.time.delayedCall(3000, this.ready, [], this);
+    this.timedEvent = this.time.delayedCall(2000, this.ready, [], this);
     
     this.load.image('bgImage', bgImage);
-    this.load.image('logo', logo);
+    this.load.spritesheet("player", player, {
+      frameWidth: 73,
+      frameHeight: 97
+  });
+    this.load.image('platform', platform);
     this.load.audio('bgMusic', bgMusic);
     this.load.image('butOne', butOne);
     this.load.image('butTwo', butTwo);
     this.load.image('checkedBox', checkedBox);
     this.load.image('box', box)
-  }
-  create () {
   }
 
   init () {
