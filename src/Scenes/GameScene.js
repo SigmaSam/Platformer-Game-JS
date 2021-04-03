@@ -1,4 +1,4 @@
-import 'phaser';
+import Phaser from'phaser';
 import gameOptions from '../Config/gameOptions';
  
 export default class GameScene extends Phaser.Scene {
@@ -6,29 +6,31 @@ export default class GameScene extends Phaser.Scene {
     super('Game');
   }
   
-  create () {
-    
-    this.score = 0; 
-    this.addedPlatforms = 0; 
+  create () {    
     this.add.image(480, 360, 'bgImage');
-    
+
+    // group with all active platforms.
     this.platformGroup = this.add.group({
       removeCallback(platform) {
         platform.scene.platformPool.add(platform);
       },
     });
-
+    // pool
     this.platformPool = this.add.group({
       removeCallback(platform) {
         platform.scene.platformGroup.add(platform);
       },
     });
+    // number of consecutive jumps made by the player
+    this.playerJumps = 0;
+    
+    this.addPlatform(game.config.width, game.config.width / 2, game.config.height * gameOptions.platformVerticalLimit[1]);
 
     this.addPlatform(this.game.config.width, this.game.config.width / 2, game.config.height * gameOptions.platformVerticalLimit[1]);
 
     this.player = this.physics.add.sprite(100, 250, 'player');
 
-    this.player.setBounce(0);
+    this.player.setBounce(0.2);
     this.player.setGravityY(gameOptions.playerGravity);
 
     this.anims.create({
@@ -60,7 +62,7 @@ export default class GameScene extends Phaser.Scene {
     else{
         platform = this.physics.add.sprite(posX, posY, "platform");
         platform.setImmovable(true);
-        platform.setVelocityX(Phaser.Math.Between(gameOptions.platformSpeedRange[0], gameOptions.platformSpeedRange[1]) * -1);
+        platform.setVelocityX(Phaser.Math.Between(gameOptions.platformSpeedRange[0], gameOptions.platformSpeedRange[0]) * -1);
         this.platformGroup.add(platform);
     }
     platform.displayWidth = platformWidth;
@@ -69,10 +71,9 @@ export default class GameScene extends Phaser.Scene {
   
 update() {
    if(this.player.y > game.config.height){
-    this.scene.start("Credits");
+    this.scene.start("Title");
   }
   this.player.x = gameOptions.playerStartPosition;
-
 
   let minDistance = game.config.width;
   let rightmostPlatformHeight = 0;
@@ -101,7 +102,7 @@ update() {
     this.player.setVelocityX(0);
   }
 
-  let minDistance = this.game.config.width;
+
   this.platformGroup.getChildren().forEach((platform) => {
     const platformDistance = this.game.config.width - platform.x - platform.displayWidth / 2;
     minDistance = Math.min(minDistance, platformDistance);
