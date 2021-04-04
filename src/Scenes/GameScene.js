@@ -34,19 +34,19 @@ export default class GameScene extends Phaser.Scene {
     this.player.setGravityY(gameOptions.playerGravity);
 
     this.anims.create({
-      key: 'turn',
-      frames: [{ key: 'player', frame: 6 }],
-      frameRate: 20,
-    });
-
-    this.anims.create({
       key: 'right',
       frames: this.anims.generateFrameNumbers('player', { start: 5, end: 8 }),
       frameRate: 10,
       repeat: -1,
     });
 
-    this.physics.add.collider(this.player, this.platformGroup);
+    this.physics.add.collider(this.player, this.platformGroup, function(){
+      if(!this.player.anims.isPlaying){
+          this.player.anims.play("right");
+      }
+  }, null, this);
+
+    this.input.on("pointerdown", this.jump, this);
   }
 
   addPlatform(platformWidth, posX, posY){
@@ -69,6 +69,18 @@ export default class GameScene extends Phaser.Scene {
     this.nextPlatformDistance = Phaser.Math.Between(gameOptions.spawnRange[0], gameOptions.spawnRange[1]);
 }
   
+jump(){
+  if(this.player.body.touching.down || (this.playerJumps > 0 && this.playerJumps < gameOptions.jumps)){
+      if(this.player.body.touching.down){
+          this.playerJumps = 0;
+      }
+      this.player.setVelocityY(gameOptions.jumpForce * -1);
+      this.playerJumps += 1;
+
+      this.player.anims.stop();
+  }
+}
+
 update() {
    if(this.player.y > game.config.height){
     this.scene.start("Title");
@@ -88,20 +100,6 @@ update() {
           this.platformGroup.remove(platform);
       }
   }, this);
-
-  this.cursors = this.input.keyboard.createCursorKeys();
-
-  if (this.player.body.touching.down) {
-    this.player.anims.play('right', true);
-    this.player.setVelocityY(0);
-    this.player.setVelocityX(gameOptions.platformStartSpeed);
-  }
-  if (this.cursors.up.isDown && this.player.body.touching.down) {
-    this.player.anims.play('turn', true);
-    this.player.setVelocityY(gameOptions.jumpForce * -1.2);
-    this.player.setVelocityX(0);
-  }
-
 
   this.platformGroup.getChildren().forEach((platform) => {
     const platformDistance = this.game.config.width - platform.x - platform.displayWidth / 2;
@@ -135,4 +133,3 @@ update() {
 }
 
 };
-  
