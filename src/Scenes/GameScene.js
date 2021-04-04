@@ -8,29 +8,50 @@ export default class GameScene extends Phaser.Scene {
   
   create () {    
     this.add.image(480, 360, 'bgImage');
+    this.score = 0;
+    this.addedPlatforms = 0;
 
-    // group with all active platforms.
+    this.starGroup = this.add.group({
+      removeCallback(stars) {
+        stars.scene.starPool.add(stars);
+      },
+    });
+
+    this.starPool = this.add.group({
+      removeCallback(stars) {
+        stars.scene.starGroup.add(stars);
+      },
+    });
+
+    const collectStar = (player, stars) => {
+      this.score += 1;
+      this.scoreText.setText(`Score: ${this.score}`);
+      this.starGroup.killAndHide(stars);
+      this.starGroup.remove(stars);
+    };
+
     this.platformGroup = this.add.group({
       removeCallback(platform) {
         platform.scene.platformPool.add(platform);
       },
     });
-    // pool
+
     this.platformPool = this.add.group({
       removeCallback(platform) {
         platform.scene.platformGroup.add(platform);
       },
     });
-    // number of consecutive jumps made by the player
-    this.playerJumps = 0;
-    
+
     this.addPlatform(game.config.width, game.config.width / 2, game.config.height * gameOptions.platformVerticalLimit[1]);
 
     this.addPlatform(this.game.config.width, this.game.config.width / 2, game.config.height * gameOptions.platformVerticalLimit[1]);
 
+    this.playerJumps = 0;
+
     this.player = this.physics.add.sprite(100, 250, 'player');
 
     this.player.setBounce(0.2);
+
     this.player.setGravityY(gameOptions.playerGravity);
 
     this.anims.create({
@@ -44,9 +65,12 @@ export default class GameScene extends Phaser.Scene {
       if(!this.player.anims.isPlaying){
           this.player.anims.play("right");
       }
-  }, null, this);
+    }, null, this);
+
 
     this.input.on("pointerdown", this.jump, this);
+    this.physics.add.overlap(this.player, this.starGroup, collectStar, null, this);
+    this.scoreText = this.add.text(16, 16, `Score: ${this.score}`, { fontSize: '32px', fill: '#fff' });
   }
 
   addPlatform(platformWidth, posX, posY){
@@ -67,16 +91,33 @@ export default class GameScene extends Phaser.Scene {
     }
     platform.displayWidth = platformWidth;
     this.nextPlatformDistance = Phaser.Math.Between(gameOptions.spawnRange[0], gameOptions.spawnRange[1]);
+    if (this.addedPlatforms > 1) {
+      if (Phaser.Math.Between(1, 100) <= gameOptions.starsPercent * 100) {
+        if (this.starPool.getLength()) {
+          const stars = this.starPool.getFirst();
+          stars.x = posX;
+          stars.y = posY -96;
+          stars.active = true;
+          stars.visible = true;
+          this.starPool.remove(stars);
+        } else {
+          const stars = this.physics.add.image(posX, posY -96, 'stars');
+          stars.body.allowGravity = false;
+          stars.setImmovable(true);
+          stars.setVelocityX(platform.body.velocity.x);
+          this.starGroup.add(stars);
+        }
+      }
+    }
 }
   
 jump(){
   if(this.player.body.touching.down || (this.playerJumps < gameOptions.jumps)){
       if(this.player.body.touching.down){
-          this.playerJumps = 0;
+        this.playerJumps = 0;
       }
       this.player.setVelocityY(gameOptions.jumpForce * -1);
       this.playerJumps += 1;
-
   }
 }
 

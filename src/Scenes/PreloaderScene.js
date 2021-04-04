@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import player from '../assets/player.png';
 import platform from '../assets/platform.png';
+import stars from '../assets/stars.png';
 import bgImage from '../assets/background/bg.png';
 import bgMusic from '../assets/awesomeness.wav';
 import butOne from '../assets/ui/blue_button02.png';
@@ -15,7 +16,6 @@ export default class PreloaderScene extends Phaser.Scene {
     super('Preloader');
   }
   preload () {
-    // display progress bar
     var progressBar = this.add.graphics();
     var progressBox = this.add.graphics();
     progressBox.fillStyle(0x222222, 0.8);
@@ -56,7 +56,6 @@ export default class PreloaderScene extends Phaser.Scene {
     });
     assetText.setOrigin(0.5, 0.5);
    
-    // update progress bar
     this.load.on('progress', function (value) {
       percentText.setText(parseInt(value * 100) + '%');
       progressBar.clear();
@@ -64,12 +63,10 @@ export default class PreloaderScene extends Phaser.Scene {
       progressBar.fillRect(250, 280, 300 * value, 30);
     });
    
-    // update file progress text
     this.load.on('fileprogress', function (file) {
       assetText.setText('Loading asset: ' + file.key);
     });
 
-    // remove progress bar when complete
     this.load.on('complete', function () {
       progressBar.destroy();
       progressBox.destroy();
@@ -85,13 +82,15 @@ export default class PreloaderScene extends Phaser.Scene {
     this.load.spritesheet("player", player, {
       frameWidth: 73,
       frameHeight: 97
-  });
+    });
+    this.load.image("stars", stars);
     this.load.image('platform', platform);
-    this.load.audio('bgMusic', bgMusic);
     this.load.image('butOne', butOne);
     this.load.image('butTwo', butTwo);
     this.load.image('checkedBox', checkedBox);
     this.load.image('box', box)
+    this.load.image('stars', stars)
+    this.load.audio('bgMusic', bgMusic);
   }
 
   init () {
