@@ -123,7 +123,7 @@ jump(){
 
 update() {
    if(this.player.y > game.config.height){
-    this.scene.start("Title");
+    this.scene.start("Leader");
   }
   this.player.x = gameOptions.playerStartPosition;
 

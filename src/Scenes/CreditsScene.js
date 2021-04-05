@@ -27,8 +27,8 @@ export default class CreditsScene extends Phaser.Scene {
       targets: this.creditsText,
       y: -100,
       ease: 'Power1',
-      duration: 3000,
-      delay: 1000,
+      duration: 1500,
+      delay: 500,
       onComplete: function () {
         this.destroy;
       }
