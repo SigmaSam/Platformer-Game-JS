@@ -25,7 +25,7 @@ export default class LeaderboardScene extends Phaser.Scene {
       this.add.text(0, 0, 'Leaderboard', { fontSize: '55px' }),
       this.zone,
     );
-    const firstScoreHeight = 120;
+    const firstScoreHeight = 140;
     const leftColumn = this.game.config.width / 3;
     const rightColumn = this.game.config.width - leftColumn;
     const fontSize = '30px';

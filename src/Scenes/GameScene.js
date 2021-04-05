@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import gameOptions from '../Config/gameOptions';
+import loaders from '../loaders/loader';
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
@@ -121,9 +122,11 @@ export default class GameScene extends Phaser.Scene {
   }
 
   update() {
-    if (this.player.y > game.config.height) {
+    if (this.player.y > this.game.config.height) {
+      loaders.submitScore(localStorage.getItem('username'), this.score);
       this.scene.start('Leader');
     }
+
     this.player.x = gameOptions.playerStartPosition;
 
     let minDistance = game.config.width;

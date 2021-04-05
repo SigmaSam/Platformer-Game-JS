@@ -29,7 +29,7 @@ if (localStorage.getItem('username')) {
   }
   window.game = new Game();
 } else {
-  document.getElementById('hide-unless-username').classList.remove(['d-none']);
+  document.getElementById('hide-unless-username').classList.remove('invisible');
   const input = document.getElementById('nameInput');
   const button = document.getElementById('submitButton');
   button.addEventListener('click', () => {

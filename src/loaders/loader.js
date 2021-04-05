@@ -1,4 +1,4 @@
-const gameKey = '';
+const gameKey = 'BWBlrLujUhes2x2wrHEe';
 const fetch = require('node-fetch');
 
 export default {
@@ -7,7 +7,6 @@ export default {
     if (username === '') {
       username = 'No name';
     }
-
     localStorage.setItem('username', username);
   },
 

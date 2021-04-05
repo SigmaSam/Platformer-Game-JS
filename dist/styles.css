@@ -1,3 +1,8 @@
+@tailwind base;
+@tailwind components;
+
+
+
 body {
     display: flex;
     height: 95vh;
@@ -25,3 +30,5 @@ form {
     margin: 8rem auto;
 
 }
+
+@tailwind utilities;
