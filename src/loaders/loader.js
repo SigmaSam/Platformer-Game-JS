@@ -1,4 +1,4 @@
-const gameKey = 'Zl4d7IVkemOTTVg2fUdz';
+const gameKey = '';
 const fetch = require('node-fetch');
 
 export default {

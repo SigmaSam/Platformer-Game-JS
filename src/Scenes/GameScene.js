@@ -1,12 +1,12 @@
-import Phaser from'phaser';
+import Phaser from 'phaser';
 import gameOptions from '../Config/gameOptions';
- 
+
 export default class GameScene extends Phaser.Scene {
-  constructor () {
+  constructor() {
     super('Game');
   }
-  
-  create () {    
+
+  create() {
     this.add.image(480, 360, 'bgImage');
     this.score = 0;
     this.addedPlatforms = 0;
@@ -61,33 +61,32 @@ export default class GameScene extends Phaser.Scene {
       repeat: -1,
     });
 
-    this.physics.add.collider(this.player, this.platformGroup, function(){
-      if(!this.player.anims.isPlaying){
-          this.player.anims.play("right");
+    this.physics.add.collider(this.player, this.platformGroup, function () {
+      if (!this.player.anims.isPlaying) {
+        this.player.anims.play('right');
       }
     }, null, this);
 
 
-    this.input.on("pointerdown", this.jump, this);
+    this.input.on('pointerdown', this.jump, this);
     this.physics.add.overlap(this.player, this.starGroup, collectStar, null, this);
     this.scoreText = this.add.text(16, 16, `Score: ${this.score}`, { fontSize: '32px', fill: '#fff' });
   }
 
-  addPlatform(platformWidth, posX, posY){
+  addPlatform(platformWidth, posX, posY) {
     this.addedPlatforms += 1;
     let platform;
-    if(this.platformPool.getLength()){
-        platform = this.platformPool.getFirst();
-        platform.x = posX;
-        platform.active = true;
-        platform.visible = true;
-        this.platformPool.remove(platform);
-    }
-    else{
-        platform = this.physics.add.sprite(posX, posY, "platform");
-        platform.setImmovable(true);
-        platform.setVelocityX(Phaser.Math.Between(gameOptions.platformSpeedRange[0], gameOptions.platformSpeedRange[0]) * -1);
-        this.platformGroup.add(platform);
+    if (this.platformPool.getLength()) {
+      platform = this.platformPool.getFirst();
+      platform.x = posX;
+      platform.active = true;
+      platform.visible = true;
+      this.platformPool.remove(platform);
+    } else {
+      platform = this.physics.add.sprite(posX, posY, 'platform');
+      platform.setImmovable(true);
+      platform.setVelocityX(Phaser.Math.Between(gameOptions.platformSpeedRange[0], gameOptions.platformSpeedRange[0]) * -1);
+      this.platformGroup.add(platform);
     }
     platform.displayWidth = platformWidth;
     this.nextPlatformDistance = Phaser.Math.Between(gameOptions.spawnRange[0], gameOptions.spawnRange[1]);
@@ -96,12 +95,12 @@ export default class GameScene extends Phaser.Scene {
         if (this.starPool.getLength()) {
           const stars = this.starPool.getFirst();
           stars.x = posX;
-          stars.y = posY -96;
+          stars.y = posY - 96;
           stars.active = true;
           stars.visible = true;
           this.starPool.remove(stars);
         } else {
-          const stars = this.physics.add.image(posX, posY -96, 'stars');
+          const stars = this.physics.add.image(posX, posY - 96, 'stars');
           stars.body.allowGravity = false;
           stars.setImmovable(true);
           stars.setVelocityX(platform.body.velocity.x);
@@ -109,67 +108,66 @@ export default class GameScene extends Phaser.Scene {
         }
       }
     }
-}
-  
-jump(){
-  if(this.player.body.touching.down || (this.playerJumps < gameOptions.jumps)){
-      if(this.player.body.touching.down){
+  }
+
+  jump() {
+    if (this.player.body.touching.down || (this.playerJumps < gameOptions.jumps)) {
+      if (this.player.body.touching.down) {
         this.playerJumps = 0;
       }
       this.player.setVelocityY(gameOptions.jumpForce * -1);
       this.playerJumps += 1;
-  }
-}
-
-update() {
-   if(this.player.y > game.config.height){
-    this.scene.start("Leader");
-  }
-  this.player.x = gameOptions.playerStartPosition;
-
-  let minDistance = game.config.width;
-  let rightmostPlatformHeight = 0;
-  this.platformGroup.getChildren().forEach(function(platform){
-      let platformDistance = game.config.width - platform.x - platform.displayWidth / 2;
-      if(platformDistance < minDistance){
-          minDistance = platformDistance;
-          rightmostPlatformHeight = platform.y;
-      }
-      if(platform.x < - platform.displayWidth / 2){
-          this.platformGroup.killAndHide(platform);
-          this.platformGroup.remove(platform);
-      }
-  }, this);
-
-  this.platformGroup.getChildren().forEach((platform) => {
-    const platformDistance = this.game.config.width - platform.x - platform.displayWidth / 2;
-    minDistance = Math.min(minDistance, platformDistance);
-    if (platform.x < -platform.displayWidth / 2) {
-      this.platformGroup.killAndHide(platform);
-      this.platformGroup.remove(platform);
     }
-  }, this);
+  }
 
-  if(minDistance > this.nextPlatformDistance){
-    const nextPlatformWidth = Phaser.Math.Between(
-      gameOptions.platformSizeRange[0],
-       gameOptions.platformSizeRange[1]
+  update() {
+    if (this.player.y > game.config.height) {
+      this.scene.start('Leader');
+    }
+    this.player.x = gameOptions.playerStartPosition;
+
+    let minDistance = game.config.width;
+    let rightmostPlatformHeight = 0;
+    this.platformGroup.getChildren().forEach(function (platform) {
+      const platformDistance = game.config.width - platform.x - platform.displayWidth / 2;
+      if (platformDistance < minDistance) {
+        minDistance = platformDistance;
+        rightmostPlatformHeight = platform.y;
+      }
+      if (platform.x < -platform.displayWidth / 2) {
+        this.platformGroup.killAndHide(platform);
+        this.platformGroup.remove(platform);
+      }
+    }, this);
+
+    this.platformGroup.getChildren().forEach((platform) => {
+      const platformDistance = this.game.config.width - platform.x - platform.displayWidth / 2;
+      minDistance = Math.min(minDistance, platformDistance);
+      if (platform.x < -platform.displayWidth / 2) {
+        this.platformGroup.killAndHide(platform);
+        this.platformGroup.remove(platform);
+      }
+    }, this);
+
+    if (minDistance > this.nextPlatformDistance) {
+      const nextPlatformWidth = Phaser.Math.Between(
+        gameOptions.platformSizeRange[0],
+        gameOptions.platformSizeRange[1],
       );
-    const platformRandomHeight = gameOptions.platformHeighScale * Phaser.Math.Between(
-      gameOptions.platformHeightRange[0],
-      gameOptions.platformHeightRange[1]
-    );
+      const platformRandomHeight = gameOptions.platformHeighScale * Phaser.Math.Between(
+        gameOptions.platformHeightRange[0],
+        gameOptions.platformHeightRange[1],
+      );
 
-    let nextPlatformGap = rightmostPlatformHeight + platformRandomHeight;
-    let minPlatformHeight = game.config.height * gameOptions.platformVerticalLimit[0];
-    let maxPlatformHeight = game.config.height * gameOptions.platformVerticalLimit[1];
-    let nextPlatformHeight = Phaser.Math.Clamp(
-      nextPlatformGap,
-      minPlatformHeight,
-      maxPlatformHeight
-    );
-    this.addPlatform(nextPlatformWidth, this.game.config.width + nextPlatformWidth / 2, nextPlatformHeight);
+      const nextPlatformGap = rightmostPlatformHeight + platformRandomHeight;
+      const minPlatformHeight = game.config.height * gameOptions.platformVerticalLimit[0];
+      const maxPlatformHeight = game.config.height * gameOptions.platformVerticalLimit[1];
+      const nextPlatformHeight = Phaser.Math.Clamp(
+        nextPlatformGap,
+        minPlatformHeight,
+        maxPlatformHeight,
+      );
+      this.addPlatform(nextPlatformWidth, this.game.config.width + nextPlatformWidth / 2, nextPlatformHeight);
+    }
   }
 }
-
-};

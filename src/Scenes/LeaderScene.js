@@ -63,8 +63,6 @@ export default class LeaderboardScene extends Phaser.Scene {
       );
     }
 
-    this.gameButton = new Button(this, config.width/2, config.height/2 + 300, 'butOne', 'butTwo', 'Menu', 'Title');
-
+    this.gameButton = new Button(this, config.width / 2, config.height / 2 + 300, 'butOne', 'butTwo', 'Menu', 'Title');
   }
 }
-  
