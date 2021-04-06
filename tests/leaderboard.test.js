@@ -9,7 +9,7 @@ describe("saves an input's value to localStorage", () => {
     expect(localStorage.getItem('username') === 'Test123').toBe(true);
   });
 
-  it("saves the string 'Nobody' as the value for the localStorage 'username' key if input.value is empty", () => {
+  it("saves the string 'No name' as the value for the localStorage 'username' key if input.value is empty", () => {
     input.value = '';
     loader.submitNameForm(input);
     expect(localStorage.getItem('username') === 'No name').toBe(true);

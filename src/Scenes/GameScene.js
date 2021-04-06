@@ -68,8 +68,9 @@ export default class GameScene extends Phaser.Scene {
       }
     }, null, this);
 
+    let spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
-    this.input.on('pointerdown', this.jump, this);
+    spaceBar.on('down', this.jump, this);
     this.physics.add.overlap(this.player, this.starGroup, collectStar, null, this);
     this.scoreText = this.add.text(16, 16, `Score: ${this.score}`, { fontSize: '32px', fill: '#fff' });
   }
